@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Post List{% endblock %}
+
+
+{% block content %}
+
+<a href="{%  url 'create_post' %}">Create New Post</a>
+<ul>
+    {% for post in posts %}
+    <li>
+        <a href="{% url 'post_details' post.id %}">{{post.title}}</a>
+    </li>
+    {% empty %}
+        <li>No Posts Available</li>
+
+    {% endfor %}
+</ul>
+{% endblock %}
