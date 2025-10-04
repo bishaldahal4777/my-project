@@ -5,11 +5,17 @@ from django.core.paginator import Paginator
 
 # List all posts
 def post_list(request):
-    posts = Post.objects.all().order_by('-created_at')
-    paginator = Paginator(post_list,5)
-    page_number = request.Get.get('page')
+    query = request.GET.get('q')
+    if query:
+        post_list = Post.objects.filter(title__icontains=query).order_by('-created_at')
+    else:
+        post_list = Post.objects.all().order_by('-created_at')
+
+    paginator = Paginator(post_list, 5)
+    page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    return render(request, 'blog/post_list.html', {'page_obj': page_obj, 'query': query})
+
 
 # Post detail
 def post_detail(request, post_id):
