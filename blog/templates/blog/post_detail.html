@@ -1,13 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}{{ post.title }}{% endblock %}
 
-<html>
-    <head>
-        <title>Post Details of {{post.title}}</title>
-
-    </head>
-
-<body>
-
-   <h1>{{post.title}}</h1>
-<p>{{post.content}}</p>
-</body>
-</html>
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+    <small class="text-muted">Created at: {{ post.created_at }}</small><br><br>
+    <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'post_list' %}" class="btn btn-secondary">Back</a>
+  </div>
+</div>
+{% endblock %}
