@@ -37,7 +37,7 @@ def post_detail(request, post_id):
             comment.post=post
             comment.author = request.user
             comment.save()
-            return redirect(request, 'post_detail', post_id =post.id)
+            return redirect('post_detail', post_id =post.id)
     else:
         form = CommentForm()
 
@@ -129,7 +129,7 @@ def edit_comment(request, comment_id):
     else:
         form = CommentForm(instance=comment)
 
-    return render(request, 'blog/edit_comment.html', {'form': form})
+    return render(request, 'blog/edit_comment.html', {'form': form, 'comment': comment})
 
 
 @login_required
