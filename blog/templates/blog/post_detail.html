@@ -6,9 +6,12 @@
   <div class="card-body">
     <h2>{{ post.title }}</h2>
     <p>{{ post.content }}</p>
-    <small class="text-muted">Created at: {{ post.created_at }}</small><br><br>
+    <p class="text-muted">Posted by {{ post.author.username }} on {{ post.created_at|date:"M d, Y" }}</p>
+
+    {% if user.authenticated and user == post.author %}
     <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Edit</a>
     <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
+    {% endif%}
     <a href="{% url 'post_list' %}" class="btn btn-secondary">Back</a>
   </div>
 </div>
