@@ -8,7 +8,7 @@
     <p>{{ post.content }}</p>
     <p class="text-muted">Posted by {{ post.author.username }} on {{ post.created_at|date:"M d, Y" }}</p>
 
-    {% if user.authenticated and user == post.author %}
+    {% if user.is_authenticated and user == post.author %}
     <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Edit</a>
     <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
     {% endif%}

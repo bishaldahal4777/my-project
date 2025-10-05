@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -25,8 +25,27 @@ def post_list(request):
 # Post detail
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    comments = post.comments.all().order_by('-created_at')
 
+    if(request.method == 'POST'):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post=post
+            comment.author = request.user
+            comment.save()
+            return redirect(request, 'post_detail', post_id =post.id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'blog/post_detail.html', {
+        'post': post,
+        'comments': comments,
+        'form': form
+        })
 # Create a new post
 @login_required
 def create_post(request):
@@ -48,6 +67,7 @@ def update_post(request, post_id):
 
     if post.author != request.user:
         return HttpResponse("you are not allowed to edit this post.", status=403)
+    
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
@@ -64,6 +84,7 @@ def delete_post(request, post_id):
 
     if post.author != request.user:
         return HttpResponse("You are not allowed to delete this post", status=403)
+    
     if request.method == "POST":
         post.delete()
         return redirect('post_list')
