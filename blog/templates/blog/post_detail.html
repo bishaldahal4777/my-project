@@ -7,6 +7,37 @@
     <h2>{{ post.title }}</h2>
     <p>{{ post.content }}</p>
     <p class="text-muted">Posted by {{ post.author.username }} on {{ post.created_at|date:"M d, Y" }}</p>
+<h2 class="mt-4">Comments</h2>
+
+<!-- Comment Form -->
+{% if user.is_authenticated %}
+  <form method="POST" class="mb-4">
+    {% csrf_token %}
+    {{ form.content }}
+    <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+  </form>
+{% else %}
+  <p><a href="{% url 'login' %}">Login</a> to post a comment.</p>
+{% endif %}
+
+<!-- Existing Comments -->
+{% for comment in comments %}
+  <div class="card mb-2 shadow-sm">
+    <div class="card-body">
+      <p class="mb-1">{{ comment.content }}</p>
+      <small class="text-muted">by {{ comment.author.username }} on {{ comment.created_at|date:"M d, Y H:i" }}</small>
+
+      {% if user == comment.author %}
+        <div class="mt-2">
+          <a href="{% url 'edit_comment' comment.id %}" class="btn btn-sm btn-warning">Edit</a>
+          <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-danger">Delete</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% empty %}
+  <p>No comments yet.</p>
+{% endfor %}
 
     {% if user.is_authenticated and user == post.author %}
     <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Edit</a>
@@ -14,5 +45,6 @@
     {% endif%}
     <a href="{% url 'post_list' %}" class="btn btn-secondary">Back</a>
   </div>
+
 </div>
 {% endblock %}
