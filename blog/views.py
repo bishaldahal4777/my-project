@@ -4,6 +4,8 @@ from .forms import PostForm
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
+
 
 # List all posts
 def post_list(request):
@@ -25,6 +27,7 @@ def post_detail(request, post_id):
     return render(request, 'blog/post_detail.html', {'post': post})
 
 # Create a new post
+@login_required
 def create_post(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -38,6 +41,7 @@ def create_post(request):
     return render(request, 'blog/create_post.html', {'form': form})
 
 # Update an existing post
+@login_required
 def update_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
@@ -50,6 +54,7 @@ def update_post(request, post_id):
     return render(request, 'blog/update_post.html', {'form': form})
 
 # Delete a post
+@login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == "POST":
