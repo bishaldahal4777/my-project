@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from .forms import PostForm
@@ -44,6 +45,9 @@ def create_post(request):
 @login_required
 def update_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+
+    if post.author != request.user:
+        return HttpResponse("you are not allowed to edit this post.", status=403)
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
@@ -57,6 +61,9 @@ def update_post(request, post_id):
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+
+    if post.author != request.user:
+        return HttpResponse("You are not allowed to delete this post", status=403)
     if request.method == "POST":
         post.delete()
         return redirect('post_list')
