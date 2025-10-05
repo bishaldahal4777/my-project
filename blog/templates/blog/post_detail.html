@@ -38,7 +38,7 @@
 {% empty %}
   <p>No comments yet.</p>
 {% endfor %}
-a
+
     {% if user.is_authenticated and user == post.author %}
     <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Edit</a>
     <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>

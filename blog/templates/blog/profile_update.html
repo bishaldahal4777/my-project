@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Update Profile</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

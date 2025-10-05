@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Admin Dashboard</h2>
+
+  <h3>All Users</h3>
+  <ul>
+    {% for user in all_users %}
+      <li>{{ user.username }} - {{ user.email }}</li>
+    {% endfor %}
+  </ul>
+
+  <h3>All Posts</h3>
+  {% for post in all_posts %}
+    <div class="card mb-2 p-2">
+      <strong>{{ post.title }}</strong> by {{ post.author.username }}
+    </div>
+  {% endfor %}
+
+  <h3>All Comments</h3>
+  {% for comment in all_comments %}
+    <div class="card mb-2 p-2">
+      {{ comment.content }} on {{ comment.post.title }} by {{ comment.author.username }}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
