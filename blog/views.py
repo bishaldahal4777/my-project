@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from .forms import PostForm
 from django.core.paginator import Paginator
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 # List all posts
 def post_list(request):
@@ -27,7 +29,9 @@ def create_post(request):
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
             return redirect('post_list')
     else:
         form = PostForm()
@@ -52,3 +56,28 @@ def delete_post(request, post_id):
         post.delete()
         return redirect('post_list')
     return render(request, 'blog/delete_post.html', {'post': post})
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'blog/signup.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('post_list')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'blog/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
