@@ -4,9 +4,9 @@ from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 
 # List all posts
 def post_list(request):
@@ -144,3 +144,25 @@ def delete_comment(request, comment_id):
         return redirect('post_detail', post_id=post_id)
 
     return render(request, 'blog/delete_comment.html', {'comment': comment})
+
+@login_required
+def dashboard(request):
+    user_posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    user_comments = Comment.objects.filter(author=request.user).order_by('-created_at')
+    context = {
+        'user_posts': user_posts,
+        'user_comments': user_comments,
+    }
+    return render(request, 'blog/dashboard.html', context)
+
+@login_required
+def profile_update(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('dashboard')
+    else:
+        form = UserChangeForm(instance=request.user)
+    return render(request, 'blog/profile_update.html', {'form': form})

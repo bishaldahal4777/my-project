@@ -13,6 +13,9 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('comment/<int:comment_id>/edit/', views.edit_comment, name='edit_comment'),
     path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('profile/update/', views.profile_update, name='profile_update'),
+
 
 
 

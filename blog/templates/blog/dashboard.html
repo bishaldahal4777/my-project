@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Welcome, {{ user.username }} 👋</h2>
+  <p>Email: {{ user.email }}</p>
+  <a href="{% url 'profile_update' %}" class="btn btn-secondary mb-3">Edit Profile</a>
+
+  <hr>
+  <h3>Your Posts</h3>
+  {% if user_posts %}
+    {% for post in user_posts %}
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h5>{{ post.title }}</h5>
+          <p>{{ post.content|truncatewords:20 }}</p>
+          <a href="{% url 'post_detail' post.id %}" class="btn btn-primary btn-sm">View</a>
+          <a href="{% url 'update_post' post.id %}" class="btn btn-warning btn-sm">Edit</a>
+          <a href="{% url 'delete_post' post.id %}" class="btn btn-danger btn-sm">Delete</a>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You have not created any posts yet.</p>
+  {% endif %}
+
+  <hr>
+  <h3>Your Comments</h3>
+  {% if user_comments %}
+    {% for comment in user_comments %}
+      <div class="card mb-2 shadow-sm">
+        <div class="card-body">
+          <p>{{ comment.content }}</p>
+          <small class="text-muted">on <a href="{% url 'post_detail' comment.post.id %}">{{ comment.post.title }}</a> at {{ comment.created_at|date:"M d, Y H:i" }}</small>
+          <div class="mt-2">
+            <a href="{% url 'edit_comment' comment.id %}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{% url 'delete_comment' comment.id %}" class="btn btn-danger btn-sm">Delete</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You have not posted any comments yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
