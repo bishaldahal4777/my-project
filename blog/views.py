@@ -166,3 +166,13 @@ def profile_update(request):
     else:
         form = UserChangeForm(instance=request.user)
     return render(request, 'blog/profile_update.html', {'form': form})
+
+def home(request):
+    # Optional: show latest posts on home page
+    latest_posts = Post.objects.all().order_by('-created_at')[:5]
+    
+    query = request.GET.get('q')
+    if query:
+        latest_posts = Post.objects.filter(title__icontains=query).order_by('-created_at')
+
+    return render(request, 'home.html', {'latest_posts': latest_posts, 'query': query})

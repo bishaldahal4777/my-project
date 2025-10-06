@@ -19,25 +19,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post_list' %}">Posts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'create_post' %}">Create Post</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">Posts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'create_post' %}">Create Post</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -48,7 +36,7 @@
 <section class="py-5 text-center bg-primary text-white">
     <div class="container">
         <h1 class="display-4 fw-bold">Welcome to My Project</h1>
-        <p class="lead">Manage posts, comments, and users with ease. Fully responsive and ready for multi-tenant expansion.</p>
+        <p class="lead">Manage posts, comments, and users efficiently with a clean, responsive interface.</p>
         {% if not user.is_authenticated %}
             <a href="{% url 'signup' %}" class="btn btn-lg btn-light me-2">Get Started</a>
             <a href="{% url 'login' %}" class="btn btn-lg btn-outline-light">Login</a>
@@ -56,8 +44,41 @@
     </div>
 </section>
 
-<!-- Features Section -->
+<!-- Search & Latest Posts -->
 <section class="py-5">
+    <div class="container">
+
+        <!-- Search -->
+        <form method="GET" class="mb-4 d-flex justify-content-center">
+            <input type="text" name="q" class="form-control w-50 me-2" placeholder="Search posts..." value="{{ query }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <!-- Latest Posts -->
+        <div class="row">
+            {% for post in latest_posts %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.content|truncatewords:15 }}</p>
+                        <p class="text-muted small">By {{ post.author.username }} on {{ post.created_at|date:"M d, Y" }}</p>
+                        <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <p class="text-center">No posts found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row text-center g-4">
             <div class="col-md-4">
