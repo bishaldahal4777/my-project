@@ -55,9 +55,11 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            messages.success(request, "Post Created Successfully!")
             return redirect('post_list')
     else:
         form = PostForm()
+       
     return render(request, 'blog/create_post.html', {'form': form})
 
 # Update an existing post
@@ -72,6 +74,7 @@ def update_post(request, post_id):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
+            messages.success(request, "Post Created Successfully!")
             return redirect('post_detail', post_id=post.id)
     else:
         form = PostForm(instance=post)
