@@ -68,7 +68,7 @@ def update_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
     if post.author != request.user:
-        return HttpResponse("you are not allowed to edit this post.", status=403)
+        return HttpResponse("you are not allowed to edit this Post.", status=403)
     
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
