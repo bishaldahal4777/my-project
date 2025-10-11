@@ -80,7 +80,7 @@ def update_post(request, post_id):
         form = PostForm(instance=post)
     return render(request, 'blog/update_post.html', {'form': form})
 
-# Delete a post
+# Delete the post
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
